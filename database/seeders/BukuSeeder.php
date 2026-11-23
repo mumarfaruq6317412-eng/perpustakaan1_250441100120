@@ -23,30 +23,35 @@ class BukuSeeder extends Seeder
                 'judul' => 'Pemrograman API Laravel',
                 'penulis' => 'Moh. Umar Faruq',
                 'tahun_terbit' => 2026,
+                'stok' => 5,
             ],
             [
                 'kategori_id' => $komputer->id,
                 'judul' => 'Algoritma dan Struktur Data',
                 'penulis' => 'Rinaldi Munir',
                 'tahun_terbit' => 2021,
+                'stok' => 5,
             ],
             [
                 'kategori_id' => $database->id,
                 'judul' => 'Basis Data Relasional',
                 'penulis' => 'Fathansyah',
                 'tahun_terbit' => 2020,
+                'stok' => 5,
             ],
             [
                 'kategori_id' => $jaringan->id,
                 'judul' => 'Jaringan Komputer Modern',
                 'penulis' => 'Andrew S. Tanenbaum',
                 'tahun_terbit' => 2019,
+                'stok' => 5,
             ],
             [
                 'kategori_id' => $ai->id,
                 'judul' => 'Kecerdasan Buatan dan Pembelajaran Mesin',
                 'penulis' => 'Suyanto',
                 'tahun_terbit' => 2022,
+                'stok' => 5,
             ],
         ];
 

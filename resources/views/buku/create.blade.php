@@ -20,26 +20,31 @@
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">ID / Kategori:</label>
                             <input type="text" name="kategori_id" value="{{ old('kategori_id') }}" 
                                 class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                            <x-input-error :messages="$errors->get('kategori_id')" class="mt-2" />
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Judul Buku:</label>
                             <input type="text" name="judul" value="{{ old('judul') }}" 
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required minlength="3" maxlength="150">
+                            <x-input-error :messages="$errors->get('judul')" class="mt-2" />
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Penulis:</label>
                             <input type="text" name="penulis" value="{{ old('penulis') }}" 
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required minlength="3" maxlength="100">
+                            <x-input-error :messages="$errors->get('penulis')" class="mt-2" />
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Tahun Terbit:</label>
                             <input type="number" name="tahun_terbit" value="{{ old('tahun_terbit') }}" 
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required min="1900" max="{{ now()->year }}">
+                            <x-input-error :messages="$errors->get('tahun_terbit')" class="mt-2" />
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Stok (Opsional):</label>
                             <input type="number" name="stok" value="{{ old('stok') }}" 
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" min="0">
+                            <x-input-error :messages="$errors->get('stok')" class="mt-2" />
                         </div>
                     </div>
 
