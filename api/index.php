@@ -1,4 +1,4 @@
 <?php
 
-// Forward Vercel requests to Laravel app
+// Forward Vercel 
 require __DIR__.'/../public/index.php';
