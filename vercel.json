@@ -1,30 +1,26 @@
 {
   "version": 2,
-  "functions": {
-    "api/index.php": {
-      "runtime": "vercel-php@0.7.3"
-    }
-  },
+  "builds": [
+    { "src": "/api/index.php", "use": "vercel-php@0.7.3" },
+    { "src": "/public/**", "use": "@vercel/static" }
+  ],
   "routes": [
-    {
-      "src": "/build/(.*)",
-      "dest": "/public/build/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.php"
-    }
+    { "src": "/build/(.*)", "dest": "/public/build/$1" },
+    { "src": "/(favicon\\.ico|robots\\.txt)", "dest": "/public/$1" },
+    { "src": "/(.*)", "dest": "/api/index.php" }
   ],
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
-    "APP_CONFIG_CACHE": "/tmp/config.php",
-    "APP_EVENTS_CACHE": "/tmp/events.php",
-    "APP_PACKAGES_CACHE": "/tmp/packages.php",
-    "APP_ROUTES_CACHE": "/tmp/routes.php",
-    "APP_SERVICES_CACHE": "/tmp/services.php",
+    "APP_URL": "https://perpustakaan1-250441100120-eta.vercel.app",
+    "APP_CONFIG_CACHE": "/tmp/config.cache",
+    "APP_EVENTS_CACHE": "/tmp/events.cache",
+    "APP_PACKAGES_CACHE": "/tmp/packages.cache",
+    "APP_ROUTES_CACHE": "/tmp/routes.cache",
+    "APP_SERVICES_CACHE": "/tmp/services.cache",
     "VIEW_COMPILED_PATH": "/tmp/views",
     "CACHE_DRIVER": "array",
-    "LOG_CHANNEL": "stderr"
+    "LOG_CHANNEL": "stderr",
+    "SESSION_DRIVER": "cookie"
   }
 }
