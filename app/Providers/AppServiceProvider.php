@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,10 +21,14 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-{
-    // Definisi Gate kelola-buku untuk Admin dan Petugas (Soal 3)
-    Gate::define('kelola-buku', function (User $user) {
-        return $user->hasRole(['admin', 'petugas']);
-    });
-}
+    {
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
+        // Definisi Gate kelola-buku untuk Admin dan Petugas (Soal 3)
+        Gate::define('kelola-buku', function (User $user) {
+            return $user->hasRole(['admin', 'petugas']);
+        });
+    }
 }
