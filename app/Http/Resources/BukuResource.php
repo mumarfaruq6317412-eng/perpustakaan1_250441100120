@@ -19,7 +19,6 @@ class BukuResource extends JsonResource
 
             'penulis' => $this->penulis,
             'tahun_terbit' => $this->tahun_terbit,
-            'stok' => $this->stok,
         ];
     }
 }

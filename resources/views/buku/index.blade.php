@@ -35,7 +35,6 @@
                                 <th class="py-3 px-4 border-b">Judul</th>
                                 <th class="py-3 px-4 border-b">Penulis</th>
                                 <th class="py-3 px-4 border-b">Tahun</th>
-                                <th class="py-3 px-4 border-b">Stok</th>
                                 <th class="py-3 px-4 border-b text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -46,7 +45,6 @@
                                     <td class="py-3 px-4 font-medium text-gray-900">{{ $b->judul ?? $b->nama_buku }}</td>
                                     <td class="py-3 px-4 text-gray-600">{{ $b->penulis ?? '-' }}</td>
                                     <td class="py-3 px-4 text-gray-600">{{ $b->tahun_terbit ?? '-' }}</td>
-                                    <td class="py-3 px-4 text-gray-600">{{ $b->stok }}</td>
                                     <td class="py-3 px-4 text-center space-x-1">
     <!-- Tombol Detail selalu bisa dilihat -->
     <a href="{{ route('buku.show', $b->id) }}" class="px-3 py-1 bg-sky-500 text-white rounded hover:bg-sky-600 transition text-xs font-semibold shadow-sm">Detail</a>
@@ -67,7 +65,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="py-6 text-center text-gray-500">Belum ada data buku di perpustakaan.</td>
+                                    <td colspan="5" class="py-6 text-center text-gray-500">Belum ada data buku di perpustakaan.</td>
                                 </tr>
                             @endforelse
                         </tbody>

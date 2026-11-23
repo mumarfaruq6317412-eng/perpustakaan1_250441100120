@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anggota;
-use App\Models\Buku;
 use App\Models\Peminjaman;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class PeminjamanController extends Controller
@@ -41,38 +39,21 @@ class PeminjamanController extends Controller
     // Siswa mengajukan peminjaman buku
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
+        $request->validate([
             'buku_id' => 'required|exists:bukus,id',
         ]);
 
-        $stokHabis = DB::transaction(function () use ($validated): bool {
-            $buku = Buku::query()->lockForUpdate()->findOrFail($validated['buku_id']);
-            $jumlahPeminjamanAktif = $buku->peminjaman()
-                ->whereIn('status', ['Pending', 'Diajukan', 'Dipinjam'])
-                ->count();
+        $anggota = Anggota::firstOrCreate(
+            ['email' => Auth::user()->email],
+            ['nama' => Auth::user()->name, 'no_telepon' => null],
+        );
 
-            if ($jumlahPeminjamanAktif >= $buku->stok) {
-                return true;
-            }
-
-            $anggota = Anggota::firstOrCreate(
-                ['email' => Auth::user()->email],
-                ['nama' => Auth::user()->name, 'no_telepon' => null],
-            );
-
-            Peminjaman::create([
-                'anggota_id' => $anggota->id,
-                'buku_id' => $buku->id,
-                'tanggal_pinjam' => now(),
-                'status' => 'Pending',
-            ]);
-
-            return false;
-        });
-
-        if ($stokHabis) {
-            return redirect()->route('buku.katalog')->with('error', 'Stok buku habis atau seluruh eksemplar sedang dipinjam/menunggu persetujuan.');
-        }
+        Peminjaman::create([
+            'anggota_id' => $anggota->id,
+            'buku_id' => $request->buku_id,
+            'tanggal_pinjam' => now(),
+            'status' => 'Pending',
+        ]);
 
         return redirect()->route('buku.katalog')->with('success', 'Permohonan peminjaman berhasil dikirim. Menunggu persetujuan petugas.');
     }
@@ -80,10 +61,7 @@ class PeminjamanController extends Controller
     // Admin/Petugas melihat daftar kelola peminjaman dengan filter status
     public function kelola(Request $request): View
     {
-        $validated = $request->validate([
-            'status' => ['nullable', 'in:Semua,Pending,Diajukan,Dipinjam,Dikembalikan,Ditolak'],
-        ]);
-        $status = $validated['status'] ?? null;
+        $status = $request->query('status');
 
         $query = Peminjaman::with(['anggota', 'buku']);
 
@@ -143,12 +121,12 @@ class PeminjamanController extends Controller
     }
 
     public function show(int $id): View
-    {
-        $peminjaman = Peminjaman::with(['anggota', 'buku'])->findOrFail($id);
+{
+    $peminjaman = Peminjaman::with(['anggota', 'buku'])->findOrFail($id);
+    
+    // Menutup celah IDOR (Soal 4 A4)
+    Gate::authorize('view', $peminjaman);
 
-        // Menutup celah IDOR (Soal 4 A4)
-        Gate::authorize('view', $peminjaman);
-
-        return view('peminjaman.show', compact('peminjaman'));
-    }
+    return view('peminjaman.show', compact('peminjaman'));
+}
 }

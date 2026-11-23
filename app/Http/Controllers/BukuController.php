@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBukuRequest;
 use App\Models\Buku;
 use App\Models\Kategori;
-use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\RedirectResponse;
 
 class BukuController extends Controller
 {
@@ -21,14 +21,10 @@ class BukuController extends Controller
 
     public function cari(Request $request)
     {
-        $validated = $request->validate([
-            'judul' => ['required', 'string', 'max:150'],
-        ]);
-
+        
         // (Sesuaikan nama tabel database Anda, misal 'bukus' atau 'buku')
-        $judul = $validated['judul'];
-        $results = DB::select('SELECT * FROM bukus WHERE judul = ?', [$judul]);
-
+        $judul = $request->input('judul');
+        $results = DB::select("SELECT * FROM bukus WHERE judul = ?", [$judul]);
         return response()->json($results);
     }
 
@@ -52,11 +48,7 @@ class BukuController extends Controller
     // Menampilkan katalog buku untuk siswa / umum
     public function katalog()
     {
-        $bukuList = Buku::with('kategori')
-            ->withCount(['peminjaman as peminjaman_aktif_count' => function ($query): void {
-                $query->whereIn('status', ['Pending', 'Diajukan', 'Dipinjam']);
-            }])
-            ->get();
+        $bukuList = Buku::with('kategori')->get();
 
         return view('buku.katalog', compact('bukuList'));
     }
@@ -86,20 +78,7 @@ class BukuController extends Controller
             'judul' => 'required|string|max:150',
             'penulis' => 'required|string|max:100',
             'tahun_terbit' => 'required|integer|between:1900,'.date('Y'),
-            'stok' => 'sometimes|integer|min:0',
         ]);
-
-        if ($request->has('stok')) {
-            $jumlahPeminjamanAktif = Peminjaman::where('buku_id', $id)
-                ->whereIn('status', ['Pending', 'Diajukan', 'Dipinjam'])
-                ->count();
-
-            if ($request->integer('stok') < $jumlahPeminjamanAktif) {
-                return back()
-                    ->withErrors(['stok' => 'Stok tidak boleh kurang dari jumlah buku yang sedang dipinjam atau menunggu persetujuan.'])
-                    ->withInput();
-            }
-        }
 
         $buku = Buku::findOrFail($id);
         $buku->update($request->all());
@@ -109,11 +88,11 @@ class BukuController extends Controller
 
     // Menghapus data buku (Delete)
 
-    public function destroy(int $id)
-    {
-        $buku = Buku::findOrFail($id);
-        $buku->delete();
+   public function destroy(int $id)
+{
+    $buku = Buku::findOrFail($id);
+    $buku->delete();
 
-        return redirect()->route('buku.index')->with('success', 'Buku berhasil dihapus dari sistem.');
-    }
+    return redirect()->route('buku.index')->with('success', 'Buku berhasil dihapus dari sistem.');
+}
 }

@@ -6,13 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBukuRequest extends FormRequest
 {
-    protected function prepareForValidation(): void
-    {
-        if ($this->isMethod('post') && $this->input('stok') === null) {
-            $this->merge(['stok' => 0]);
-        }
-    }
-
     public function authorize(): bool
     {
         return true; //
@@ -27,7 +20,6 @@ class StoreBukuRequest extends FormRequest
             'judul' => 'required|string|min:3|max:150', // [cite: 2]
             'penulis' => 'required|string|min:3|max:100', // [cite: 2]
             'tahun_terbit' => "required|integer|between:1900,{$tahunSekarang}", // [cite: 2]
-            'stok' => 'sometimes|integer|min:0',
         ];
     }
 
@@ -49,8 +41,6 @@ class StoreBukuRequest extends FormRequest
             'tahun_terbit.required' => 'Tahun terbit wajib diisi.',
             'tahun_terbit.integer' => 'Tahun terbit harus berupa bilangan bulat.',
             'tahun_terbit.between' => "Tahun terbit harus antara 1900 sampai {$tahunSekarang}.", // [cite: 4]
-            'stok.integer' => 'Stok harus berupa bilangan bulat.',
-            'stok.min' => 'Stok tidak boleh kurang dari 0.',
         ];
     }
 
@@ -59,7 +49,6 @@ class StoreBukuRequest extends FormRequest
         return [
             'kategori_id' => 'kategori', // [cite: 2]
             'tahun_terbit' => 'tahun terbit', // [cite: 2]
-            'stok' => 'stok',
         ];
     }
 }

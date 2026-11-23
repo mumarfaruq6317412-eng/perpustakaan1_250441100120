@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('login_activities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('role')->default('tanpa_role');
-            $table->timestamp('logged_in_at');
-            $table->index(['logged_in_at', 'role']);
+            $table->timestamps();
         });
     }
 

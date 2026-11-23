@@ -30,7 +30,6 @@
                                 <th class="py-3 px-4 border-b">Judul Buku</th>
                                 <th class="py-3 px-4 border-b">Penulis</th>
                                 <th class="py-3 px-4 border-b">Tahun Terbit</th>
-                                <th class="py-3 px-4 border-b text-center">Stok Tersedia</th>
                                 <th class="py-3 px-4 border-b text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -42,30 +41,18 @@
                                     <td class="py-3 px-4 text-gray-600">{{ $buku->penulis }}</td>
                                     <td class="py-3 px-4 text-gray-600">{{ $buku->tahun_terbit }}</td>
                                     <td class="py-3 px-4 text-center">
-                                        @php($stokTersedia = $buku->stok - $buku->peminjaman_aktif_count)
-                                        @if ($stokTersedia > 0)
-                                            <span class="font-semibold text-emerald-700">{{ $stokTersedia }}</span>
-                                        @else
-                                            <span class="font-semibold text-red-600">Habis</span>
-                                        @endif
-                                    </td>
-                                    <td class="py-3 px-4 text-center">
-                                        @if ($stokTersedia > 0)
-                                            <form action="{{ route('peminjaman.store') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin meminjam buku ini?');">
-                                                @csrf
-                                                <input type="hidden" name="buku_id" value="{{ $buku->id }}">
-                                                <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-xs font-semibold shadow-sm">
-                                                    Pinjam Buku
-                                                </button>
-                                            </form>
-                                        @else
-                                            <span class="text-sm text-gray-500">Tidak tersedia</span>
-                                        @endif
+                                        <form action="{{ route('peminjaman.store') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin meminjam buku ini?');">
+                                            @csrf
+                                            <input type="hidden" name="buku_id" value="{{ $buku->id }}">
+                                            <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-xs font-semibold shadow-sm">
+                                                Pinjam Buku
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="py-6 text-center text-gray-500">Belum ada buku tersedia di katalog.</td>
+                                    <td colspan="5" class="py-6 text-center text-gray-500">Belum ada buku tersedia di katalog.</td>
                                 </tr>
                             @endforelse
                         </tbody>
